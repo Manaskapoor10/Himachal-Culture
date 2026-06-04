@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himachal Virasat | Culture & Heritage</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f7f9;
+            color: #333;
+        }
+        
+        .districts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .district-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .district-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .district-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 18px;
+        }
+        
+        .card-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        
+        .devnagari {
+            font-size: 1.1rem;
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        /* Modal */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 1150px;
+            max-height: 92vh;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: modalPop 0.5s ease;
+        }
+        
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.75) translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+        }
+        
+        .modal-header h1 {
+            font-size: 2.2rem;
+        }
+        
+        .modal-body {
+            display: flex;
+            gap: 25px;
+            padding: 25px;
+            overflow-y: auto;
+            max-height: calc(92vh - 180px);
+        }
+        
+        .modal-left {
+            flex: 1;
+        }
+        
+        .modal-right {
+            flex: 1;
+        }
+        
+        h2,
+        h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+        }
+        
+        .place-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+        
+        .place-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .place-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .how-to-reach {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .how-to-reach p {
+            margin: 14px 0;
+            padding-left: 12px;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .video-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .video-tab {
+            padding: 10px 18px;
+            background: #ecf0f1;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+        
+        .video-tab.active {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .modal-footer {
+            padding: 15px 30px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+        
+        .btn-back {
+            padding: 12px 30px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 2rem;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+        }
+        /* Lightbox */
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+        
+        .lightbox img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 12px;
+        }
+        
+        .lightbox-close,
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
+        .lightbox-close {
+            top: -60px;
+            right: 10px;
+        }
+        
+        .lightbox-prev {
+            left: -70px;
+            top: 45%;
+        }
+        
+        .lightbox-next {
+            right: -70px;
+            top: 45%;
+        }
+        
+        .music-controls {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.35);
+            padding: 8px 14px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .music-btn {
+            padding: 8px 12px;
+            font-size: 13px;
+            border: none;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.12);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 42px;
+        }
+        
+        .music-btn:hover {
+            background-color: rgba(255, 255, 255, 0.22);
+            transform: scale(1.1);
+        }
+        
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: white;
+        }
+        
+        .volume-container input[type="range"] {
+            accent-color: #ffffff;
+            width: 100px;
+            cursor: pointer;
+        }
+        /* Auto hide when scrolling */
+        
+        .music-controls.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-background video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+    </style>
+</head>
+
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Background Video -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+      <source src="video web.mp4" type="video/mp4">
+      <!-- You can add more formats for better compatibility -->
+      <!-- <source src="your-video.webm" type="video/webm"> -->
+    </video>
+    </div>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+    <source src="videos/shiv.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+    <!-- Music Controls -->
+    <div class="music-controls">
+        <button id="playBtn" class="music-btn">▶ Play</button>
+        <button id="stopBtn" class="music-btn" style="display: none;">⏹ Stop</button>
+
+        <div class="volume-container">
+            <span>🔊</span>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.7">
+        </div>
+    </div>
+    <script>
+        const music = document.getElementById('bgMusic');
+        const playBtn = document.getElementById('playBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        // Set initial volume
+        music.volume = 0.7;
+
+        // Play Button
+        playBtn.addEventListener('click', () => {
+            music.play();
+            playBtn.style.display = 'none';
+            stopBtn.style.display = 'inline-block';
+        });
+
+        // Stop Button
+        stopBtn.addEventListener('click', () => {
+            music.pause();
+            music.currentTime = 0;
+            playBtn.style.display = 'inline-block';
+            stopBtn.style.display = 'none';
+        });
+
+        // Volume Control
+        volumeSlider.addEventListener('input', () => {
+            music.volume = volumeSlider.value;
+        });
+    </script>
+
+
+
+
+
+    <!-- Progress Bar -->
+    <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-emerald-500 to-amber-500 z-[9999]"></div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-md z-50 transition-transform duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+             <div class="hidden md:flex gap-8 text-lg font-medium nav-bar flex items-center">
+
+            <h1 class="text-3xl font-bold text-emerald-800 dark:text-emerald-400 heading-font gap-10">हिमाचल विरासत</h1>
+
+                <a href="#home" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Home</b></a>
+                <a href="#districts" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Districts</b></a>
+                <a href="#arts" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Arts</b></a>
+                <a href="#cuisine" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Cuisine</b></a>
+                <a href="#timeline" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Timeline</b></a>
+                <a href="#gallery" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Gallery</b></a>
+                <a href="#quiz" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Quiz</b></a>
+                <a href="#team" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Team</b></a>
+                <a href="#music" class="hover:text-emerald-700 dark:hover:text-emerald-400 transition"><b>Music</b></a>
+           
+                <input id="searchInput" type="text" placeholder="Search districts..." class="px-5 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full focus:outline-none focus:border-emerald-500 w-72 hidden md:block">
+
+                <button onclick="toggleDarkMode()" class="text-2xl text-emerald-800 dark:text-emerald-400 hover:text-emerald-600">
+                <i class="fas fa-moon" id="darkIcon"></i>
+            </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
+        <video autoplay muted loop playsinline class="hero-video">
+      <source src="video web.mp4" type="video/mp4">
+    </video>
+        <div class="hero-overlay"></div>
+        <div id="snow-container"></div>
+
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+            <h1 class="text-6xl md:text-7xl heading-font mb-6 text-shadow">Himachal Virasat</h1>
+            <p class="text-2xl md:text-3xl mb-10">Where Mountains Whisper Ancient Stories</p>
+            <button onclick="document.getElementById('districts').scrollIntoView({behavior: 'smooth'})" class="btn-primary text-xl px-12 py-5 rounded-full">
+        <a href="#Sacred">Explore Himachal</a>
+      </button>
+        </div>
+    </section>
+    <!-- Sacred Places / Famous Temples Section -->
+    <!-- Sacred Places / Famous Temples Section -->
+    <section id=Sacred class="py-16 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-5xl heading-font text-center mb-4 text-emerald-900 dark:text-emerald-400">
+                Sacred Places of Himachal
+            </h2>
+            <p class="text-center text-gray-600 dark:text-gray-400 mb-12 text-lg">
+                Divine Temples & Spiritual Landmarks
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+
+                <!-- Temple Cards -->
+                <div class="group cursor-pointer rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all" onclick="openTempleModal(0)">
+                    <img src="images/churdhar.jpg" alt="Churdhar Temple" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="p-5 text-center">
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white">Churdhar Temple</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400">Sirmaur • 12,000 ft</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all" onclick="openTempleModal(1)">
+                    <img src="images/hadima.jpg" alt="Hadimba Temple" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="p-5 text-center">
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white">Hadimba Temple</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400">Manali • Ancient Wooden Temple</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all" onclick="openTempleModal(2)">
+                    <img src="images/kt.jpg" alt="Jwala Ji Temple" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="p-5 text-center">
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white">Jwala Ji Temple</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400">Kangra • Eternal Flame</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all" onclick="openTempleModal(3)">
+                    <img src="images/jakhu.jpg" alt="Jakhu Temple" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="p-5 text-center">
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white">Jakhu Temple</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400">Shimla • Lord Hanuman</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all" onclick="openTempleModal(4)">
+                    <img src="images/taradevi.jpg" alt="Tara Devi Temple" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="p-5 text-center">
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white">Tara Devi Temple</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400">Shimla • Ancient Shakti Peeth</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all" onclick="openTempleModal(5)">
+                    <img src="images/bggmk.jpg" alt="Bankhandi Maa" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="p-5 text-center">
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white">Bankhandi Maa Baglamukhi</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400">Kangra • Goddess of Power</p>
+                    </div>
+                </div>
+                <div class="group cursor-pointer rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all" onclick="openTempleModal(6)">
+                    <img src="images/mn.jpg" alt="Manimahesh Kailash" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="p-5 text-center">
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white">Manimahesh Kailash</h3>
+                        <p class="text-sm text-emerald-700 dark:text-emerald-400">Chamba • believed to be the abode of lord shiva</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Temple Video Modal (Full Screen / Wide) -->
+    <div id="templeModal" class="hidden fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl max-w-4xl w-full mx-4 overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center px-6 py-4 border-b dark:border-gray-700">
+                <h3 id="modalTitle" class="text-2xl font-bold text-emerald-800 dark:text-emerald-400"></h3>
+                <button onclick="closeModal()" class="text-4xl leading-none text-gray-500 hover:text-red-500 transition">×</button>
+            </div>
+
+            <!-- Video Player -->
+            <div class="relative bg-black">
+                <video id="templeVideo" class="w-full aspect-video" controls autoplay playsinline>
+                Your browser does not support the video tag.
+            </video>
+            </div>
+
+            <!-- Description -->
+            <div class="p-6">
+                <p id="modalDescription" class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="p-6">
+        <p id="modalDescription" class="text-gray-700 dark:text-gray-300 leading-relaxed text-[17px]"></p>
+    </div>
+    </div>
+    </div>
+
+    <!-- Districts -->
+    <h1 style="text-align:center; margin-top:30px; color:#2c3e50;">Discover Himachal Pradesh</h1>
+
+    <!-- Districts Grid -->
+    <div class="districts-grid" id="districtsGrid"></div>
+
+    <!-- District Modal -->
+    <div id="districtModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">✕</button>
+
+            <div class="modal-header">
+                <h1 id="modalName"></h1>
+                <p id="modalDevnagari" class="devnagari"></p>
+            </div>
+
+            <div class="modal-body">
+                <!-- Left Side: Places -->
+                <div class="modal-left">
+                    <h2>Popular Places</h2>
+                    <div class="places-grid" id="placesGrid"></div>
+                </div>
+
+                <!-- Right Side: Info -->
+                <div class="modal-right">
+                    <h2>About <span id="modalNameRight"></span></h2>
+                    <p id="modalDesc"></p>
+
+                    <h3>Traditional Culture</h3>
+                    <p id="modalCulture"></p>
+
+                    <h3>How to Reach</h3>
+                    <div class="how-to-reach" id="howToReach"></div>
+
+                    <h3>Watch Videos</h3>
+                    <div class="video-tabs" id="videoTabs"></div>
+                    <div class="video-container">
+                        <iframe id="videoPlayer" width="100%" height="320" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-back" id="backBtn">← Back to Districts</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close">✕</span>
+            <span class="lightbox-prev">‹</span>
+            <img id="images/lightboxImage" src="" alt="Place Image">
+            <span class="lightbox-next">›</span>
+        </div>
+    </div>
+
+    <!-- Arts -->
+    <section id="arts" class="py-20 bg-emerald-50 dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-5xl heading-font text-center mb-12 text-emerald-900 dark:text-emerald-400">Arts & Crafts</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="bg-white dark:bg-gray-700 rounded-3xl overflow-hidden shadow-xl district-card">
+                    <img src="images/kanpaint.jpg" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Kangra Miniature Painting</h3>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-700 rounded-3xl overflow-hidden shadow-xl district-card">
+                    <img src="images/chamba.jpg" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Chamba Rumal</h3>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-700 rounded-3xl overflow-hidden shadow-xl district-card">
+                    <img src="images/kin.jpg" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Kinnauri Woolens</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cuisine -->
+    <section id="cuisine" class="py-20 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-5xl heading-font text-center mb-4 text-emerald-900 dark:text-emerald-400">Himachali Cuisine</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400 mb-12">Taste the Flavors of the Himalayas</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-700 rounded-3xl overflow-hidden shadow-xl district-card">
+                    <img src="images/siddu.jpg" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Siddu</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Steamed stuffed bread with walnut paste.</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-700 rounded-3xl overflow-hidden shadow-xl district-card">
+                    <img src="images/dham.jpg" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Dham</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Traditional festive meal in copper utensils.</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-700 rounded-3xl overflow-hidden shadow-xl district-card">
+                    <img src="images/madra.jpg" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Madra</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Yogurt-based chickpea curry from Chamba.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Heritage Timeline -->
+    <section id="timeline" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-5xl heading-font text-center mb-12 text-emerald-900">Heritage Timeline</h2>
+            <div class="max-w-3xl mx-auto space-y-12 relative before:absolute before:left-1/2 before:top-0 before:bottom-0 before:w-1 before:bg-emerald-200">
+                <div class="flex items-center gap-8">
+                    <div class="w-1/2 text-right"><strong class="text-2xl">800 AD</strong><br>Chamba Kingdom</div>
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center z-10">•</div>
+                    <div class="w-1/2">Foundation of ancient Chamba state</div>
+                </div>
+                <div class="flex items-center gap-8">
+                    <div class="w-1/2 text-right"><strong class="text-2xl">1620</strong><br>Kangra Painting School</div>
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center z-10">•</div>
+                    <div class="w-1/2">Golden period of Kangra Miniature Art</div>
+                </div>
+                <div class="flex items-center gap-8">
+                    <div class="w-1/2 text-right"><strong class="text-2xl">1840</strong><br>British Influence</div>
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center z-10">•</div>
+                    <div class="w-1/2">Shimla becomes Summer Capital</div>
+                </div>
+                <div class="flex items-center gap-8">
+                    <div class="w-1/2 text-right"><strong class="text-2xl">1971</strong><br>Statehood</div>
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center z-10">•</div>
+                    <div class="w-1/2">Himachal Pradesh becomes full state</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline, Gallery, Team, Quiz, Music sections remain same as previous version -->
+
+    <!-- Team Section -->
+    <section id="team" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-5xl heading-font text-center mb-4 text-emerald-900">Meet Our Team</h2>
+            <p class="text-center text-gray-600 mb-12 text-xl">The Talented Web Developers Behind This Website</p>
+
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl mb-12">
+                <img src="images/team.png" alt="Himalayan Web Solutions Team" class="w-full h-auto">
+                <div class="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/70 text-white px-10 py-4 rounded-2xl text-center">
+                    <p class="text-lg font-semibold">Himalayan Web Solutions</p>
+                    <p class="text-sm">Proudly Built in Himachal Pradesh</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="w-32 h-32 mx-auto rounded-2xl overflow-hidden border-4 border-emerald-500">
+                        <img src="images/aa.png" alt="Arushi Sharma" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-bold mt-4 text-xl">Arushi Sharma</h4>
+                    <p class="text-emerald-700">MD, Planning & Wireframing</p>
+                </div>
+                <div>
+                    <div class="w-32 h-32 mx-auto rounded-2xl overflow-hidden border-4 border-emerald-500">
+                        <img src="images/nit.jpeg" alt="Nitin Sharma" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-bold mt-4 text-xl">Nitin Sharma</h4>
+                    <p class="text-emerald-700">Full Stack Developer</p>
+                </div>
+                <div>
+                    <div class="w-32 h-32 mx-auto rounded-2xl overflow-hidden border-4 border-emerald-500">
+                        <img src="images/mad.png" alt="Madhavi Thakur" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-bold mt-4 text-xl">Madhavi Thakur</h4>
+                    <p class="text-emerald-700">HOD,Frontend Developer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="py-20 bg-white dark:bg-gray-900">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-5xl heading-font text-center mb-12 text-emerald-900 dark:text-emerald-400">Test Your Himachali Knowledge</h2>
+            <div id="quizContainer" class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-10">
+                <h3 id="questionText" class="text-2xl font-semibold mb-8 text-gray-900 dark:text-white"></h3>
+                <div id="optionsContainer" class="space-y-4"></div>
+                <button onclick="nextQuestion()" id="nextBtn" class="hidden mt-8 btn-primary w-full py-4">Next Question</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music -->
+    <section id="music" class="py-20 music-player text-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-5xl heading-font mb-10">Traditional Folk Music</h2>
+
+            ```
+            <div class="bg-transparent md rounded-4xl p-8">
+
+                <div class="flex flex-wrap justify-center gap-4">
+
+                    <button onclick="playSong(0)" class="px-4 py-3 bg-white text-emerald-900 rounded-2xl hover:bg-emerald-100">
+                🎵 Nati Song
+            </button>
+
+                    <button onclick="playSong(1)" class="px-4 py-3 bg-white text-emerald-900 rounded-2xl hover:bg-emerald-100">
+                🎵 Kinnauri Folk
+            </button>
+
+                    <button onclick="playSong(2)" class="px-4 py-3 bg-white text-emerald-900 rounded-2xl hover:bg-emerald-100">
+                🎵 Chamba Melody
+            </button>
+                    <button onclick="playSong(3)" class="px-4 py-3 bg-white text-emerald-900 rounded-2xl hover:bg-emerald-100">
+                🎵 HIM ANCHAL
+            </button>
+
+                    <!-- Stop Button -->
+                    <button onclick="stopMusic()" class="px-3 py-2 bg-red-600 text-white rounded-2xl hover:bg-red-700">
+                ⏹ Stop Music
+            </button>
+
+                </div>
+
+            </div>
+        </div>
+        ```
+
+    </section>
+
+
+
+
+    <!-- Modals -->
+    <div id="districtModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[100]">
+        <div class="modal-content bg-white dark:bg-gray-700 rounded-3xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-auto">
+            <div class="p-8">
+                <button onclick="closeModal()" class="float-right text-4xl text-gray-400 hover:text-black">×</button>
+                <img id="modalImage" class="w-full h-80 object-cover rounded-2xl">
+                <h2 id="modalName" class="text-4xl heading-font mt-6 text-gray-900 dark:text-white"></h2>
+                <p id="modalDevnagari" class="text-2xl text-emerald-700 dark:text-emerald-400"></p>
+                <p id="modalDesc" class="mt-5 text-gray-600 dark:text-gray-300"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="imageModal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[110]">
+        <button onclick="closeImageModal()" class="absolute top-8 right-8 text-white text-5xl">×</button>
+        <img id="modalImageFull" class="max-h-[85vh] max-w-[90%] rounded-2xl" alt="">
+    </div>
+
+    <!-- Back to Top -->
+    <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" class="hidden fixed bottom-8 right-8 w-14 h-14 bg-emerald-600 text-white rounded-full items-center justify-center text-2xl shadow-xl">
+    ↑
+  </button>
+
+    <footer class="bg-emerald-950 text-white py-16 text-center">
+        <p class="text-3xl heading-font">Himachal Virasat</p>
+        <p class="mt-2 text-emerald-300">@ 11.11 • ARUNIT HERITAGE 27</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        const districts = [{
+                name: "Shimla",
+                devnagari: "शिमला",
+                image: "images/shimla m.jpg",
+                famous: "Colonial Heritage, Mall Road, Toy Train",
+                desc: "Queen of Hills blending British colonial charm with local culture.",
+                culture: "Famous for rich Pahari culture, Winter Carnival, and traditional dances like Nati and Jhora.",
+                HowToReach: {
+                    air: "Jubbarhatti Airport (13 km) or Chandigarh Airport (120 km)",
+                    train: "Kalka-Shimla Toy Train (UNESCO World Heritage)",
+                    road: "Well connected via NH5 from Chandigarh (4-5 hours)"
+                },
+                places: [{
+                    name: "The Ridge",
+                    img: "images/mall.jpg",
+                    desc: "Iconic colonial landmark"
+                }, {
+                    name: "Mall Road",
+                    img: "images/tezas.jpg",
+                    desc: "Vibrant shopping street"
+                }, {
+                    name: "Jakhu Temple",
+                    img: "images/jakhu t.jpeg",
+                    desc: "Famous Hanuman Temple"
+                }, {
+                    name: "weather",
+                    img: "images/jakhu.jpg",
+                    desc: "shimla"
+                }, {
+                    name: "Christ Church",
+                    img: "images/church.jpg",
+                    desc: "Historic church"
+                }],
+                videos: [{
+                    title: "Shimla - Queen of Hills",
+                    url: "videos/shimla vid.mp4"
+                }, {
+                    title: "Kalka-Shimla Toy Train",
+                    url: "videos/toy.mp4"
+                }, {
+                    title: "Advance study",
+                    url: "videos/advance.mp4"
+                }]
+            },
+            // Add other districts similarly...
+            {
+                name: "Kangra",
+                devnagari: "कांगड़ा",
+                image: "images/kangram.jpg",
+                famous: "Kangra Painting, Jwala Mukhi Temple",
+                desc: "Cultural heart of Himachal famous for its miniature paintings and ancient temples.",
+                culture: "Known for Kangra School of Painting and rich Hindu pilgrimage sites.",
+                HowToReach: {
+                    air: "Gaggal Airport (15 km)",
+                    train: "Pathankot to Kangra Railway",
+                    road: "Well connected from Chandigarh and Delhi"
+                },
+                places: [{
+                    name: "Kangra Fort",
+                    img: "images/fort.jpg",
+                    desc: "Ancient fort"
+                }, {
+                    name: "kangri dham",
+                    img: "images/dham.jpg",
+                    desc: "delicious"
+                }, {
+                    name: "Jwala Mukhi Temple",
+                    img: "images/jj.jpg",
+                    desc: "Eternal flame temple"
+                }],
+                videos: [{
+                    title: "Kangra Valley",
+                    url: "videos/knval.mp4"
+                }, {
+                    title: "Kangra jhmakda",
+                    url: "videos/jhm.mp4"
+                }, {
+                    title: "Kangri dham",
+                    url: "videos/kdham.mp4"
+                }, {
+                    title: "Kangra train",
+                    url: "videos/train.mp4"
+                }]
+            }
+            // You can add more districts here
+        ];
+
+        const districtsGrid = document.getElementById('districtsGrid');
+        const modal = document.getElementById('districtModal');
+        const lightbox = document.getElementById('lightbox');
+        let currentImages = [];
+        let currentImageIndex = 0;
+
+        function renderDistricts() {
+            districtsGrid.innerHTML = '';
+            districts.forEach(district => {
+                const card = document.createElement('div');
+                card.className = 'district-card';
+                card.innerHTML = `
+          <img src="${district.image}" alt="${district.name}">
+          <div class="card-content">
+            <h3>${district.name}</h3>
+            <p class="devnagari">${district.devnagari}</p>
+            <p><strong>${district.famous}</strong></p>
+          </div>
+        `;
+                card.addEventListener('click', () => openDistrictModal(district));
+                districtsGrid.appendChild(card);
+            });
+        }
+
+        function openDistrictModal(district) {
+            document.getElementById('modalName').textContent = district.name;
+            document.getElementById('modalDevnagari').textContent = district.devnagari;
+            document.getElementById('modalNameRight').textContent = district.name;
+            document.getElementById('modalDesc').textContent = district.desc;
+            document.getElementById('modalCulture').textContent = district.culture;
+
+            // How to Reach
+            document.getElementById('howToReach').innerHTML = `
+        <p><strong>✈️ By Air:</strong> ${district.HowToReach.air}</p>
+        <p><strong>🚂 By Train:</strong> ${district.HowToReach.train}</p>
+        <p><strong>🛣️ By Road:</strong> ${district.HowToReach.road}</p>
+      `;
+
+            // Places
+            const placesGrid = document.getElementById('placesGrid');
+            placesGrid.innerHTML = '';
+            district.places.forEach((place, index) => {
+                const div = document.createElement('div');
+                div.className = 'place-card';
+                div.innerHTML = `
+          <img src="${place.img}" alt="${place.name}" class="place-img">
+          <div style="padding:12px;">
+            <h4>${place.name}</h4>
+            <p>${place.desc}</p>
+          </div>
+        `;
+                div.querySelector('.place-img').addEventListener('click', () => {
+                    currentImages = district.places.map(p => p.img);
+                    currentImageIndex = index;
+                    showLightbox();
+                });
+                placesGrid.appendChild(div);
+            });
+
+            // Videos
+            renderVideoTabs(district.videos);
+
+            modal.style.display = 'flex';
+        }
+
+        function renderVideoTabs(videos) {
+            const container = document.getElementById('videoTabs');
+            container.innerHTML = '';
+            videos.forEach((video, i) => {
+                const tab = document.createElement('div');
+                tab.className = `video-tab ${i === 0 ? 'active' : ''}`;
+                tab.textContent = video.title;
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.video-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById('videoPlayer').src = video.url;
+                });
+                container.appendChild(tab);
+            });
+            if (videos.length > 0) {
+                document.getElementById('videoPlayer').src = videos[0].url;
+            }
+        }
+
+        function showLightbox() {
+            document.getElementById('lightboxImage').src = currentImages[currentImageIndex];
+            lightbox.style.display = 'flex';
+        }
+
+        // Event Listeners
+        document.getElementById('closeModal').addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.getElementById('videoPlayer').src = '';
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.getElementById('videoPlayer').src = '';
+        });
+
+        // Lightbox controls
+        document.querySelector('.lightbox-close').addEventListener('click', () => lightbox.style.display = 'none');
+        document.querySelector('.lightbox-prev').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+            document.getElementById('lightboxImage').src = currentImages[currentImageIndex];
+        });
+        document.querySelector('.lightbox-next').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            document.getElementById('lightboxImage').src = currentImages[currentImageIndex];
+        });
+
+        // Initialize
+        renderDistricts();
+    </script>
+</body>
+
+</html>
